@@ -74,6 +74,7 @@ class TaskProvider extends ChangeNotifier {
     String title,
     String description,
     DateTime dueDate,
+    {TaskStatus status = TaskStatus.pending}
   ) async {
     _error = null;
 
@@ -83,6 +84,7 @@ class TaskProvider extends ChangeNotifier {
         title,
         description,
         dueDate,
+        status,
       );
 
       _tasks.add(newTask);

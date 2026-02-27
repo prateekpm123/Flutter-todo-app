@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management/providers/auth_provider.dart';
 import 'package:task_management/providers/task_provider.dart';
+import 'package:task_management/providers/theme_provider.dart';
 import 'package:task_management/screens/add_task_screen.dart';
 import 'package:task_management/screens/edit_task_screen.dart';
 import 'package:task_management/screens/home_screen.dart';
@@ -45,38 +46,36 @@ void main() async {
             taskProvider: context.read<TaskProvider>(),
           ),
         ),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const MyApp(),
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final bool _isDarkMode = false;
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Task Management',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const SplashScreen(),
-      onGenerateRoute: (settings) {
-        return _buildRoute(settings);
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return MaterialApp(
+          title: 'Task Management',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          home: const SplashScreen(),
+          onGenerateRoute: (settings) {
+            return _buildRoute(settings);
+          },
+        );
       },
     );
   }
 
-  Route<dynamic> _buildRoute(RouteSettings settings) {
+  static Route<dynamic> _buildRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => const SplashScreen());

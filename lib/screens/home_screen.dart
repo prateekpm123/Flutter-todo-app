@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:task_management/models/task.dart';
 import 'package:task_management/providers/auth_provider.dart';
 import 'package:task_management/providers/task_provider.dart';
+import 'package:task_management/providers/theme_provider.dart';
 import 'package:task_management/theme/app_theme.dart';
 import 'package:task_management/widgets/custom_widgets.dart';
 import 'package:task_management/widgets/task_widgets.dart';
@@ -79,6 +80,16 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: false,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: Consumer<ThemeProvider>(
+              builder: (context, themeProvider, _) {
+                return Icon(themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode);
+              },
+            ),
+            onPressed: () {
+              context.read<ThemeProvider>().toggleTheme();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {

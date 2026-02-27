@@ -64,6 +64,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           _titleController.text.trim(),
           _descriptionController.text.trim(),
           _selectedDate,
+          status: _selectedStatus,
         ).then((_) {
           if (mounted) {
             Navigator.pop(context);

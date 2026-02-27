@@ -98,7 +98,7 @@ class ApiService {
     }
   }
 
-  Future<Task> createTask(String userId, String title, String description, DateTime dueDate) async {
+  Future<Task> createTask(String userId, String title, String description, DateTime dueDate, TaskStatus status) async {
     try {
       if (title.isEmpty) {
         throw Exception('Title is required');
@@ -111,7 +111,7 @@ class ApiService {
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         title: title,
         description: description,
-        status: TaskStatus.pending,
+        status: status,
         dueDate: dueDate,
         createdAt: DateTime.now(),
         userId: userId,
