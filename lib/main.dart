@@ -30,17 +30,19 @@ void main() async {
         Provider<SecureStorageService>(create: (_) => SecureStorageService()),
         Provider<CacheService>(create: (_) => cacheService),
         
-        // State Management
-        ChangeNotifierProvider(
-          create: (context) => AuthProvider(
-            apiService: context.read<ApiService>(),
-            storageService: context.read<SecureStorageService>(),
-          ),
-        ),
+        // State Management - TaskProvider must be created before AuthProvider
         ChangeNotifierProvider(
           create: (context) => TaskProvider(
             apiService: context.read<ApiService>(),
             cacheService: context.read<CacheService>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AuthProvider(
+            apiService: context.read<ApiService>(),
+            storageService: context.read<SecureStorageService>(),
+            cacheService: context.read<CacheService>(),
+            taskProvider: context.read<TaskProvider>(),
           ),
         ),
       ],

@@ -159,6 +159,6 @@ class ApiService {
     } else if (error.type == DioExceptionType.badResponse) {
       return 'Error: ${error.response?.statusCode}';
     }
-    return 'An error occurred. Please try again.';
+    return 'Create new Tasks, Stay Organized!';
   }
 }

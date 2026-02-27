@@ -2,24 +2,34 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:task_management/models/user.dart';
 import 'package:task_management/providers/auth_provider.dart';
+import 'package:task_management/providers/task_provider.dart';
 import 'package:task_management/services/api_service.dart';
+import 'package:task_management/services/cache_service.dart';
 import 'package:task_management/services/secure_storage_service.dart';
 
 class MockApiService extends Mock implements ApiService {}
 class MockSecureStorageService extends Mock implements SecureStorageService {}
+class MockCacheService extends Mock implements CacheService {}
+class MockTaskProvider extends Mock implements TaskProvider {}
 
 void main() {
   group('AuthProvider', () {
     late AuthProvider authProvider;
     late MockApiService mockApiService;
     late MockSecureStorageService mockStorageService;
+    late MockCacheService mockCacheService;
+    late MockTaskProvider mockTaskProvider;
 
     setUp(() {
       mockApiService = MockApiService();
       mockStorageService = MockSecureStorageService();
+      mockCacheService = MockCacheService();
+      mockTaskProvider = MockTaskProvider();
       authProvider = AuthProvider(
         apiService: mockApiService,
         storageService: mockStorageService,
+        cacheService: mockCacheService,
+        taskProvider: mockTaskProvider,
       );
     });
 
@@ -43,6 +53,7 @@ void main() {
         email: 'test@example.com',
         name: 'Test User',
       )).thenAnswer((_) async => Future.value());
+      when(mockTaskProvider.reset()).thenAnswer((_) => Future.value());
 
       final result = await authProvider.login('test@example.com', 'password123');
 
@@ -50,6 +61,7 @@ void main() {
       expect(authProvider.isAuthenticated, true);
       expect(authProvider.currentUser, testUser);
       expect(authProvider.error, null);
+      verify(mockTaskProvider.reset()).called(1);
     });
 
     test('login handles errors gracefully', () async {
@@ -79,8 +91,11 @@ void main() {
         email: 'test@example.com',
         name: 'Test User',
       )).thenAnswer((_) async => Future.value());
+      when(mockTaskProvider.reset()).thenAnswer((_) => Future.value());
 
       when(mockStorageService.clearAll())
+          .thenAnswer((_) async => Future.value());
+      when(mockCacheService.clearCache())
           .thenAnswer((_) async => Future.value());
 
       await authProvider.login('test@example.com', 'password123');
@@ -88,6 +103,7 @@ void main() {
 
       expect(authProvider.isAuthenticated, false);
       expect(authProvider.currentUser, null);
+      verify(mockTaskProvider.reset()).called(2); // Called in both login and logout
     });
   });
 }

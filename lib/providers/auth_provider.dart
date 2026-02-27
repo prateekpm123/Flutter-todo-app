@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:task_management/models/user.dart';
+import 'package:task_management/providers/task_provider.dart';
 import 'package:task_management/services/api_service.dart';
+import 'package:task_management/services/cache_service.dart';
 import 'package:task_management/services/secure_storage_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final ApiService _apiService;
   final SecureStorageService _storageService;
+  final CacheService _cacheService;
+  final TaskProvider _taskProvider;
 
   User? _currentUser;
   String? _error;
@@ -15,8 +19,12 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider({
     required ApiService apiService,
     required SecureStorageService storageService,
+    required CacheService cacheService,
+    required TaskProvider taskProvider,
   })  : _apiService = apiService,
-        _storageService = storageService;
+        _storageService = storageService,
+        _cacheService = cacheService,
+        _taskProvider = taskProvider;
 
   // Getters
   User? get currentUser => _currentUser;
@@ -41,6 +49,9 @@ class AuthProvider extends ChangeNotifier {
         email: user.email,
         name: user.name,
       );
+
+      // Reset task provider for new user session
+      _taskProvider.reset();
 
       _isLoading = false;
       notifyListeners();
@@ -70,6 +81,9 @@ class AuthProvider extends ChangeNotifier {
         email: user.email,
         name: user.name,
       );
+
+      // Reset task provider for new user session
+      _taskProvider.reset();
 
       _isLoading = false;
       notifyListeners();
@@ -104,6 +118,8 @@ class AuthProvider extends ChangeNotifier {
     _isAuthenticated = false;
     _error = null;
     await _storageService.clearAll();
+    await _cacheService.clearCache();
+    _taskProvider.reset();
     notifyListeners();
   }
 

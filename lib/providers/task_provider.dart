@@ -165,4 +165,14 @@ class TaskProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
   }
+
+  void reset() {
+    _tasks = [];
+    _filteredTasks = [];
+    _error = null;
+    _isLoading = false;
+    _currentFilter = FilterType.all;
+    _selectedTask = null;
+    notifyListeners();
+  }
 }

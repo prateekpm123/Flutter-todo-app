@@ -158,13 +158,13 @@ class ErrorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              Icons.task_alt_sharp,
               size: 64,
               color: AppTheme.errorColor.withOpacity(0.3),
             ),
             const SizedBox(height: 16),
             Text(
-              'Oops! Something went wrong',
+              'No Tasks, Create new tasks',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
@@ -175,11 +175,11 @@ class ErrorWidget extends StatelessWidget {
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
-              ),
+              // ElevatedButton.icon(
+              //   onPressed: onRetry,
+              //   icon: const Icon(Icons.refresh),
+              //   label: const Text('Retry'),
+              // ),
             ],
           ],
         ),

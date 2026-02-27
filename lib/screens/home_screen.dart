@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 // Error state
-                if (taskProvider.error != null && taskProvider.tasks.isEmpty) {
+                if (taskProvider.error != null && taskProvider.tasks.isEmpty && !taskProvider.isLoading) {
                   return ErrorWidget(
                     error: taskProvider.error ?? 'Failed to load tasks',
                     onRetry: _loadTasks,
@@ -168,7 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           _handleTaskEdit(task);
                         },
                         onDelete: () {
-                          Navigator.pop(context);
                           _handleTaskDelete(task.id);
                         },
                         onTaskCompleted: (updatedTask) {
